@@ -163,10 +163,6 @@
             cursor: pointer;
         }
 
-        .btn-clear {
-            background: #991b1b;
-        }
-
         .btn-back {
             background: var(--soft-red);
         }
@@ -215,30 +211,45 @@
 
     <div class="box">
         <h2>ລາຍການອໍເດີ</h2>
-
-        <div id="ordersList"></div>
+        <div id="ordersList" class="empty">ກຳລັງໂຫຼດອໍເດີ...</div>
 
         <div class="btn-row">
             <button class="btn-back" onclick="location.href='index.html'">
                 ກັບໜ້າຮ້ານ
-            </button>
-
-            <button class="btn-clear" onclick="clearOrders()">
-                ລ້າງຂໍ້ມູນອໍເດີທັງໝົດ
             </button>
         </div>
     </div>
 
 </div>
 
-<script>
-    function moneyToNumber(text) {
-        if (!text) return 0;
-        return Number(String(text).replace(/[^0-9]/g, "")) || 0;
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+        getFirestore,
+        collection,
+        query,
+        orderBy,
+        onSnapshot
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+   const firebaseConfig = {
+  apiKey: "AIzaSyDcfA3xR4tJzNBLB0e8r-pcQeaGpJf9Cf4",
+  authDomain: "mona-bakehouse.firebaseapp.com",
+  projectId: "mona-bakehouse",
+  storageBucket: "mona-bakehouse.firebasestorage.app",
+  messagingSenderId: "465656281579",
+  appId: "1:465656281579:web:69d1f2b1eddb72d29c01ae"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    function moneyText(amount) {
+        return Number(amount || 0).toLocaleString() + " ກີບ";
     }
 
-    function loadOrders() {
-        const orders = JSON.parse(localStorage.getItem("allOrders")) || [];
+    function renderOrders(orders) {
+        const ordersList = document.getElementById("ordersList");
 
         document.getElementById("totalOrders").innerText = orders.length;
 
@@ -249,22 +260,20 @@
         document.getElementById("totalCustomers").innerText = uniqueCustomers.size;
 
         const totalSales = orders.reduce((sum, order) => {
-            return sum + moneyToNumber(order.total);
+            return sum + Number(order.total || 0);
         }, 0);
 
-        document.getElementById("totalSales").innerText =
-            totalSales.toLocaleString() + " ກີບ";
-
-        const ordersList = document.getElementById("ordersList");
+        document.getElementById("totalSales").innerText = moneyText(totalSales);
 
         if (orders.length === 0) {
-            ordersList.innerHTML = `<div class="empty">ຍັງບໍ່ມີອໍເດີ</div>`;
+            ordersList.className = "empty";
+            ordersList.innerHTML = "ຍັງບໍ່ມີອໍເດີ";
             return;
         }
 
-        const reversedOrders = [...orders].reverse();
+        ordersList.className = "";
 
-        ordersList.innerHTML = reversedOrders.map((order, index) => `
+        ordersList.innerHTML = orders.map((order, index) => `
             <div class="order-card">
                 <h3>Order #${orders.length - index}</h3>
 
@@ -275,7 +284,7 @@
                 <p><b>ວັນທີ/ເວລາຈັດສົ່ງ:</b> ${order.delivery || "-"}</p>
                 <p><b>ຊ່ອງທາງຊຳລະ:</b> ${order.payment || "-"}</p>
                 <p><b>ສະຖານະ:</b> ${order.paymentStatus || "-"}</p>
-                <p><b>ຍອດລວມ:</b> ${order.total || "0 ກີບ"}</p>
+                <p><b>ຍອດລວມ:</b> ${moneyText(order.total)}</p>
 
                 <div class="items">
                     <b>ລາຍການຂະໜົມ:</b>
@@ -283,7 +292,7 @@
                         ${(order.items || []).map(item => `
                             <li>
                                 ${item.name} (${item.size}) x ${item.qty}
-                                = ${(item.price * item.qty).toLocaleString()} ກີບ
+                                = ${moneyText(item.price * item.qty)}
                                 ${item.note ? `<br><small>ໝາຍເຫດ: ${item.note}</small>` : ""}
                             </li>
                         `).join("")}
@@ -298,14 +307,38 @@
         `).join("");
     }
 
-    function clearOrders() {
-        if (confirm("ຕ້ອງການລ້າງຂໍ້ມູນອໍເດີທັງໝົດບໍ?")) {
-            localStorage.removeItem("allOrders");
-            loadOrders();
+    function loadOrdersRealtime() {
+        const ordersList = document.getElementById("ordersList");
+
+        try {
+            const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+
+            onSnapshot(q, function (snapshot) {
+                const orders = [];
+
+                snapshot.forEach(doc => {
+                    orders.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+
+                renderOrders(orders);
+
+            }, function (error) {
+                console.error(error);
+                ordersList.className = "empty";
+                ordersList.innerHTML = "ໂຫຼດອໍເດີບໍ່ສຳເລັດ ກະລຸນາກວດ Firebase config ຫຼື Firestore Rules";
+            });
+
+        } catch (error) {
+            console.error(error);
+            ordersList.className = "empty";
+            ordersList.innerHTML = "ໂຫຼດອໍເດີບໍ່ສຳເລັດ ກະລຸນາກວດ Firebase config";
         }
     }
 
-    loadOrders();
+    loadOrdersRealtime();
 </script>
 
 </body>
