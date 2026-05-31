@@ -7,7 +7,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDfcfA3rK4tJzNBLB0e8r-pcQeaGpJf9Cf4",
+  apiKey: "AIzaSyDcfA3xR4tJzNBLB0e8r-pcQeaGpJf9Cf4",
   authDomain: "mona-bakehouse.firebaseapp.com",
   projectId: "mona-bakehouse",
   storageBucket: "mona-bakehouse.firebasestorage.app",
