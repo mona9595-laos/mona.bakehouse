@@ -217,6 +217,9 @@
             <button class="btn-back" onclick="location.href='index.html'">
                 ກັບໜ້າຮ້ານ
             </button>
+            <button class="btn-clear" onclick="clearAllOrders()">
+                 ລ້າງກະຕ່າ
+            /button>
         </div>
     </div>
 
@@ -225,13 +228,15 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import {
-        getFirestore,
-        collection,
-        query,
-        orderBy,
-        onSnapshot
-    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
+    getFirestore,
+    collection,
+    query,
+    orderBy,
+    onSnapshot,
+    getDocs,
+    deleteDoc,
+    doc
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
    const firebaseConfig = {
   apiKey: "AIzaSyDcfA3xR4tJzNBLB0e8r-pcQeaGpJf9Cf4",
   authDomain: "mona-bakehouse.firebaseapp.com",
@@ -306,6 +311,26 @@
             </div>
         `).join("");
     }
+    window.clearAllOrders = async function () {
+    const confirmClear = confirm("ຕ້ອງການລ້າງອໍເດີທັງໝົດບໍ?");
+
+    if (!confirmClear) return;
+
+    try {
+        const snapshot = await getDocs(collection(db, "orders"));
+
+        const deletePromises = snapshot.docs.map(orderDoc => {
+            return deleteDoc(doc(db, "orders", orderDoc.id));
+        });
+
+        await Promise.all(deletePromises);
+
+        alert("ລ້າງອໍເດີທັງໝົດສຳເລັດ");
+    } catch (error) {
+        console.error(error);
+        alert("ລ້າງອໍເດີບໍ່ສຳເລັດ");
+    }
+};
 
     function loadOrdersRealtime() {
         const ordersList = document.getElementById("ordersList");
