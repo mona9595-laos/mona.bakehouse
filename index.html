@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mona.bakehouse</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@300;400;700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header id="home">
+    <div class="logo">
+        <h1>
+            <i class="fa-solid fa-cake-candles"></i>
+            mona.bakehouse
+        </h1>
+
+        <p class="shop-contact">
+            <span><i class="fa-solid fa-phone"></i> ຕິດຕໍ່ຮ້ານ: 020 54247334</span>
+            <span><i class="fa-brands fa-instagram"></i> Instagram: mona.bakehouse</span>
+            <span><i class="fa-brands fa-tiktok"></i> TikTok: mona.bakehouse</span>
+        </p>
+    </div>
+
+    <div class="cart-box">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span id="cart-count">0</span>
+    </div>
+</header>
+
+<div class="preorder-banner">
+    <i class="fa-solid fa-circle-info"></i>
+    ກະລຸນາສັ່ງລ່ວງໜ້າ 3 ມື້ | ພື້ນທີ່ໃກ້ຄຽງສົ່ງຟຣີ
+</div>
+
+<nav class="navbar">
+    <a href="#" onclick="showSection('menu-section')">Menu</a>
+    <a href="#" onclick="showSection('best-seller-section')">Best Seller</a>
+    <a href="#" onclick="showSection('reviews-section')">Reviews</a>
+</nav>
+
+<section id="menu-section" class="page-section active">
+    <div class="container">
+
+        <div>
+            <h2 class="section-title">Menu</h2>
+            <div class="products" id="product-list"></div>
+        </div>
+
+        <div class="checkout">
+            <h2>
+                <i class="fa-solid fa-file-pen"></i>
+                ຂໍ້ມູນການສັ່ງຊື້
+            </h2>
+
+            <input type="text" id="custName" placeholder="ຊື່ ແລະ ນາມສະກຸນ">
+            <input type="text" id="custTel" placeholder="ເບີໂທລະສັບ">
+
+            <label>
+                <i class="fa-solid fa-calendar-days"></i>
+                ວັນທີ/ເວລາຈັດສົ່ງ:
+            </label>
+            <input type="text" id="deliveryTime" placeholder="ວັນທີ/ເດືອນ/ປີ ເວລາຈັກໂມງ">
+
+            <textarea id="custLoc" placeholder="ທີ່ຢູ່ຈັດສົ່ງສິນຄ້າ"></textarea>
+
+            <label>
+                <i class="fa-solid fa-money-bill-wave"></i>
+                ຊ່ອງທາງການຊຳລະເງິນ:
+            </label>
+
+            <input type="text" id="paymentMethod" value="ໂອນເງິນຜ່ານ QR Code" readonly>
+
+            <div class="qr-box">
+                <p>QR Code ສຳລັບຊຳລະເງິນ</p>
+                <img src="https://scontent.fvte5-1.fna.fbcdn.net/v/t1.15752-9/709101308_1014010221009276_3208583761078070674_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=9f807c&_nc_ohc=kuGCOMMZ7XgQ7kNvwEIthi9&_nc_oc=AdpgJuZ8nfojE0v5qvAaPZcRISaUfhqwX_DeeMmYWJPf997WsuCBE_nQmLwFaUqkkM4&_nc_zt=23&_nc_ht=scontent.fvte5-1.fna&_nc_ss=7baaf&oh=03_Q7cD5gEGZ_cvow1kjcmCS60rDrmBKuoW8jLkJkPnwj1yGfC9iQ&oe=6A4295A6" alt="QR Code Payment" class="qr-img">
+            </div>
+
+            <label>
+                <i class="fa-solid fa-image"></i>
+                ແນບສະລິບການໂອນເງິນ:
+            </label>
+
+            <input type="file" id="paymentSlip" accept="image/*">
+            <p class="slip-note">ກະລຸນາແນບຮູບສະລິບການໂອນເງິນກ່ອນຢືນຢັນອໍເດີ</p>
+
+            <div id="slip-preview-box" class="slip-preview-box" style="display:none;">
+                <p>ຮູບສະລິບທີ່ແນບ:</p>
+                <img id="slip-preview" src="" alt="Payment Slip">
+            </div>
+
+            <div class="summary">
+                <p class="summary-title">ລາຍການສິນຄ້າໃນກະຕ່າ:</p>
+
+                <div id="cart-items-container">
+                    ຍັງຫວ່າງເປັ່າ
+                </div>
+
+                <p>ລາຄາສິນຄ້າລວມ: <span id="subtotal-text">0 ກີບ</span></p>
+                <p class="discount-text">ສ່ວນຫຼຸດ 5%: <span id="discount-amount-text">0 ກີບ</span></p>
+
+                <h3>ລາຄາລວມທັງໝົດ: <span id="final-total-text">0 ກີບ</span></h3>
+            </div>
+
+            <button class="btn-confirm" onclick="confirmPurchase()">
+                <i class="fa-solid fa-check-circle"></i>
+                ຢືນຢັນສັ່ງຊື້ & ອອກບິນ
+            </button>
+
+            <button class="btn-clear" onclick="resetCart()">
+                ລ້າງກະຕ່າ
+            </button>
+        </div>
+
+    </div>
+</section>
+
+<section id="best-seller-section" class="page-section">
+    <div class="page-container">
+        <h2 class="section-title">Best Seller</h2>
+        <div class="products" id="best-seller-list"></div>
+    </div>
+</section>
+
+<section id="reviews-section" class="page-section">
+    <div class="page-container">
+        <div class="reviews">
+            <h2>Reviews</h2>
+
+            <div class="review-card">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p>"ແຊບຫຼາຍ ຫວານກຳລັງດີ"</p>
+                <h4>— phin</h4>
+            </div>
+
+            <div class="review-card">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p>"ຊີສເຄັກເນື້ອນຸ່ມ ສົ່ງຕົງເວລາ"</p>
+                <h4>— Munoy</h4>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="productModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeProductModal()">&times;</span>
+
+        <img id="modal-img" src="" alt="">
+        <h2 id="modal-name"></h2>
+        <p id="modal-price"></p>
+
+        <div id="modal-size-area"></div>
+
+        <label>ຈຳນວນ</label>
+
+        <div class="qty-control">
+            <button onclick="changeModalQty(-1)">-</button>
+            <span id="modalQty">1</span>
+            <button onclick="changeModalQty(1)">+</button>
+        </div>
+
+        <label>ໝາຍເຫດ</label>
+        <textarea id="modal-note" placeholder="ເຊັ່ນ ຕັດເປັນຊິ້ນ, ເອົາກ່ອງຂອງຂວັນ"></textarea>
+
+        <button class="btn-confirm" onclick="addModalToCart()">
+            ເພີ່ມລົງກະຕ່າ
+        </button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

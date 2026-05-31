@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Dashboard - mona.bakehouse</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Noto Sans Lao', sans-serif;
+        }
+
+        :root {
+            --red: #b23a48;
+            --soft-red: #d96c75;
+            --cream: #fff7f0;
+            --cream-dark: #f8ece1;
+            --brown: #5c4033;
+            --white: #ffffff;
+            --border: #ead8c8;
+        }
+
+        body {
+            background: var(--cream);
+            color: var(--brown);
+            padding: 20px;
+        }
+
+        .dashboard {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .top-bar {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(178, 58, 72, 0.08);
+        }
+
+        .top-bar h1 {
+            color: var(--red);
+            margin-bottom: 8px;
+        }
+
+        .top-bar p {
+            color: #777;
+            font-size: 0.95rem;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(178, 58, 72, 0.06);
+        }
+
+        .summary-card h2 {
+            color: var(--brown);
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .summary-card p {
+            color: var(--red);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .box {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(178, 58, 72, 0.06);
+        }
+
+        .box h2 {
+            color: var(--red);
+            margin-bottom: 16px;
+        }
+
+        .order-card {
+            background: var(--cream);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 16px;
+        }
+
+        .order-card h3 {
+            color: var(--red);
+            margin-bottom: 10px;
+        }
+
+        .order-card p {
+            margin-bottom: 7px;
+            line-height: 1.6;
+        }
+
+        .items {
+            background: var(--cream-dark);
+            border-radius: 14px;
+            padding: 12px;
+            margin-top: 10px;
+        }
+
+        .items ul {
+            margin-top: 8px;
+            padding-left: 22px;
+        }
+
+        .items li {
+            margin-bottom: 7px;
+            line-height: 1.5;
+        }
+
+        .slip-img {
+            width: 100%;
+            max-width: 230px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-top: 10px;
+            background: white;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        button {
+            border: none;
+            border-radius: 12px;
+            padding: 12px 16px;
+            background: var(--red);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-clear {
+            background: #991b1b;
+        }
+
+        .btn-back {
+            background: var(--soft-red);
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 14px;
+            }
+
+            .top-bar h1 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <div class="top-bar">
+        <h1>mona.bakehouse Dashboard</h1>
+        <p>ໜ້ານີ້ສຳລັບເຈົ້າຂອງຮ້ານ ເພື່ອເບິ່ງອໍເດີ ແລະ ຍອດຂາຍ</p>
+    </div>
+
+    <div class="summary-grid">
+        <div class="summary-card">
+            <h2>ຈຳນວນອໍເດີທັງໝົດ</h2>
+            <p id="totalOrders">0</p>
+        </div>
+
+        <div class="summary-card">
+            <h2>ລູກຄ້າທີ່ສັ່ງ</h2>
+            <p id="totalCustomers">0</p>
+        </div>
+
+        <div class="summary-card">
+            <h2>ຍອດຂາຍລວມ</h2>
+            <p id="totalSales">0 ກີບ</p>
+        </div>
+    </div>
+
+    <div class="box">
+        <h2>ລາຍການອໍເດີ</h2>
+
+        <div id="ordersList"></div>
+
+        <div class="btn-row">
+            <button class="btn-back" onclick="location.href='index.html'">
+                ກັບໜ້າຮ້ານ
+            </button>
+
+            <button class="btn-clear" onclick="clearOrders()">
+                ລ້າງຂໍ້ມູນອໍເດີທັງໝົດ
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function moneyToNumber(text) {
+        if (!text) return 0;
+        return Number(String(text).replace(/[^0-9]/g, "")) || 0;
+    }
+
+    function loadOrders() {
+        const orders = JSON.parse(localStorage.getItem("allOrders")) || [];
+
+        document.getElementById("totalOrders").innerText = orders.length;
+
+        const uniqueCustomers = new Set(
+            orders.map(order => `${order.name}-${order.tel}`)
+        );
+
+        document.getElementById("totalCustomers").innerText = uniqueCustomers.size;
+
+        const totalSales = orders.reduce((sum, order) => {
+            return sum + moneyToNumber(order.total);
+        }, 0);
+
+        document.getElementById("totalSales").innerText =
+            totalSales.toLocaleString() + " ກີບ";
+
+        const ordersList = document.getElementById("ordersList");
+
+        if (orders.length === 0) {
+            ordersList.innerHTML = `<div class="empty">ຍັງບໍ່ມີອໍເດີ</div>`;
+            return;
+        }
+
+        const reversedOrders = [...orders].reverse();
+
+        ordersList.innerHTML = reversedOrders.map((order, index) => `
+            <div class="order-card">
+                <h3>Order #${orders.length - index}</h3>
+
+                <p><b>ວັນທີ່ສັ່ງ:</b> ${order.date || "-"}</p>
+                <p><b>ຊື່ລູກຄ້າ:</b> ${order.name || "-"}</p>
+                <p><b>ເບີໂທ:</b> ${order.tel || "-"}</p>
+                <p><b>ທີ່ຢູ່:</b> ${order.loc || "-"}</p>
+                <p><b>ວັນທີ/ເວລາຈັດສົ່ງ:</b> ${order.delivery || "-"}</p>
+                <p><b>ຊ່ອງທາງຊຳລະ:</b> ${order.payment || "-"}</p>
+                <p><b>ສະຖານະ:</b> ${order.paymentStatus || "-"}</p>
+                <p><b>ຍອດລວມ:</b> ${order.total || "0 ກີບ"}</p>
+
+                <div class="items">
+                    <b>ລາຍການຂະໜົມ:</b>
+                    <ul>
+                        ${(order.items || []).map(item => `
+                            <li>
+                                ${item.name} (${item.size}) x ${item.qty}
+                                = ${(item.price * item.qty).toLocaleString()} ກີບ
+                                ${item.note ? `<br><small>ໝາຍເຫດ: ${item.note}</small>` : ""}
+                            </li>
+                        `).join("")}
+                    </ul>
+                </div>
+
+                ${order.paymentSlip ? `
+                    <p><b>ສະລິບການໂອນ:</b></p>
+                    <img src="${order.paymentSlip}" class="slip-img" alt="Payment Slip">
+                ` : ""}
+            </div>
+        `).join("");
+    }
+
+    function clearOrders() {
+        if (confirm("ຕ້ອງການລ້າງຂໍ້ມູນອໍເດີທັງໝົດບໍ?")) {
+            localStorage.removeItem("allOrders");
+            loadOrders();
+        }
+    }
+
+    loadOrders();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ໃບບິນຮັບເງິນ - Receipt</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans Lao', sans-serif;
+        }
+
+        body {
+            background-color: #fcf8f2;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .bill-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(139, 35, 35, 0.05);
+            border: 1px solid #f3ebe1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h2 {
+            color: #991b1b;
+            font-size: 1.5rem;
+            margin-top: 10px;
+        }
+
+        .receipt-notice {
+            margin-top: 15px;
+            background: #fff4f4;
+            border: 1px dashed #e7b8b8;
+            border-radius: 12px;
+            padding: 12px;
+            color: #991b1b;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        .info-box {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #f3ebe1;
+            padding-bottom: 15px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: #4a3f35;
+        }
+
+        .paid-status {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+            border-radius: 12px;
+            padding: 10px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .item-list {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px dashed #eaddcd;
+            color: #4a3f35;
+            font-size: 0.95rem;
+        }
+
+        .item-note {
+            font-size: 0.82rem;
+            color: #777;
+            margin-top: 3px;
+        }
+
+        .slip-box {
+            margin-top: 15px;
+            margin-bottom: 20px;
+            background: #fff7f0;
+            border: 1px dashed #ead8c8;
+            border-radius: 14px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .slip-box h3 {
+            color: #991b1b;
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+
+        .slip-box img {
+            max-width: 230px;
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid #ead8c8;
+        }
+
+        .price-details {
+            text-align: right;
+            color: #555;
+            font-size: 0.95rem;
+            margin-top: 15px;
+            line-height: 1.8;
+        }
+
+        .total-amount {
+            text-align: right;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #991b1b;
+            margin-top: 10px;
+        }
+
+        .action-btns {
+            margin-top: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-print {
+            background-color: #991b1b;
+            color: white;
+        }
+
+        .btn-save {
+            background-color: #fdfaf6;
+            color: #991b1b;
+            border: 1px solid #eaddcd;
+        }
+
+        .btn-back {
+            background-color: #f5f0e8;
+            color: #6b5a4c;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+
+            .bill-container {
+                box-shadow: none;
+                max-width: 100%;
+                border: none;
+            }
+
+            .action-btns {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="bill-container">
+    <div class="header">
+        <i class="fa-solid fa-circle-check" style="font-size: 3.5rem; color: #991b1b;"></i>
+        <h2>ສັ່ງຊື້ສຳເລັດ</h2>
+
+        <div class="receipt-notice">
+            ຫຼັງຈາກອໍເດີ້ແລ້ວທາງຮ້ານຈະກວດໃບບິນ ແລະ ຕິດຕໍ່ກັບລູກຄ້າເພື່ອຢືນຢັນອໍເດີ້ອີກຄັ້ງ
+        </div>
+    </div>
+
+    <div id="display-info" class="info-box"></div>
+    <div id="display-items" class="item-list"></div>
+
+    <div id="display-slip" class="slip-box"></div>
+
+    <div class="price-details">
+        <p>ລາຄາສິນຄ້າລວມ: <span id="display-subtotal">0 ກີບ</span></p>
+        <p style="color: #16a34a;">ສ່ວນຫຼຸດ 5%: -<span id="display-discount">0 ກີບ</span></p>
+    </div>
+
+    <div class="total-amount" id="display-total"></div>
+
+    <div class="action-btns">
+        <button class="btn btn-print" onclick="window.print()">
+            <i class="fa-solid fa-print"></i>
+            ພິມໃບບິນ
+        </button>
+
+        <button class="btn btn-save" onclick="window.print()">
+            <i class="fa-solid fa-file-pdf"></i>
+            ບັນທຶກເປັນ PDF
+        </button>
+
+        <button class="btn btn-back" onclick="location.href='index.html'">
+            <i class="fa-solid fa-arrow-left"></i>
+            ກັບຄືນໜ້າຫຼັກ
+        </button>
+    </div>
+</div>
+
+<script>
+    const orderData = JSON.parse(localStorage.getItem("myOrder"));
+
+    if (orderData) {
+        document.getElementById("display-info").innerHTML = `
+            <p><b>ວັນທີ່ເຮັດລາຍການ:</b> ${orderData.date}</p>
+            <p><b>ຊື່ລູກຄ້າ:</b> ${orderData.name}</p>
+            <p><b>ເບີໂທ:</b> ${orderData.tel}</p>
+            <p><b>ທີ່ຢູ່:</b> ${orderData.loc}</p>
+            <p><b>ວັນທີ/ເວລາຈັດສົ່ງ:</b> ${orderData.delivery}</p>
+            <p><b>ຊ່ອງທາງການຊຳລະເງິນ:</b> ${orderData.payment}</p>
+            <div class="paid-status">
+                <i class="fa-solid fa-circle-check"></i>
+                ${orderData.paymentStatus}
+            </div>
+        `;
+
+        let itemsHtml = orderData.items.map(item => `
+            <div class="item">
+                <div>
+                    <span>${item.name} <b>(${item.size})</b> x ${item.qty} ກ້ອນ</span>
+                    ${item.note ? `<div class="item-note">ໝາຍເຫດ: ${item.note}</div>` : ""}
+                </div>
+                <span>${(item.price * item.qty).toLocaleString()} ກີບ</span>
+            </div>
+        `).join("");
+
+        document.getElementById("display-items").innerHTML = itemsHtml;
+
+        if (orderData.paymentSlip) {
+            document.getElementById("display-slip").innerHTML = `
+                <h3>ສະລິບການໂອນເງິນ</h3>
+                <img src="${orderData.paymentSlip}" alt="Payment Slip">
+            `;
+        }
+
+        document.getElementById("display-subtotal").innerText = orderData.subtotal;
+        document.getElementById("display-discount").innerText = orderData.discount;
+        document.getElementById("display-total").innerText = "ລາຄາລວມທັງໝົດ: " + orderData.total;
+
+    } else {
+        document.querySelector(".bill-container").innerHTML =
+            `<h2 style="text-align:center; color:#b91c1c;">ບໍ່ພົບຂໍ້ມູນການສັ່ງຊື້</h2>`;
+    }
+</script>
+
+</body>
+</html>
